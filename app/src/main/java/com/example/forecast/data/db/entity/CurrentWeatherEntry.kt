@@ -10,7 +10,7 @@ const val CURRENT_WEATHER_ID = 0
 @Entity(tableName = "current_weather")
 data class CurrentWeatherEntry(
     @PrimaryKey(autoGenerate = false)
-    var id: Int = CURRENT_WEATHER_ID,
+    var id: Int = CURRENT_WEATHER_ID, // a fixed ID. Don't increment the rows.
 
     val cloud: Int,
 

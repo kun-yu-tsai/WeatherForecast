@@ -7,17 +7,16 @@ import com.example.forecast.data.network.response.CurrentWeatherResponse
 import com.example.forecast.internal.NoConnectivityException
 
 class WeatherNetworkDataSourceImpl(
-    private val apixuWeatherApiService: ApixuWeatherApiService
+    private val apixApiService: ApixApiService
 ) : WeatherNetworkDataSource {
 
-    private val _downloadedCurrentWeather = MutableLiveData<CurrentWeatherResponse>()
-    override val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
-        get() = _downloadedCurrentWeather
+    private val _currentWeather = MutableLiveData<CurrentWeatherResponse>()
+    override val currentWeather: LiveData<CurrentWeatherResponse>
+        get() = _currentWeather
 
-    override suspend fun fetchCurrentWeather(location: String, language: String) {
+    override suspend fun syncCurrentWeather(location: String, language: String) {
         try {
-            val fetchedCurrentWeather = apixuWeatherApiService.getCurrentWeather(location, language).await()
-            _downloadedCurrentWeather.postValue(fetchedCurrentWeather)
+            _currentWeather.postValue(apixApiService.getCurrentWeather(location, language).await())
         }
         catch (e: NoConnectivityException){
             Log.e("Connectivity", "No internet connection.", e)

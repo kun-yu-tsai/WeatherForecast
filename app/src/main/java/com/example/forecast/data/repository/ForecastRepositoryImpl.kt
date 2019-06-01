@@ -16,13 +16,14 @@ class ForecastRepositoryImpl(
 ) : ForecastRepository {
 
     init {
-        weatherNetworkDataSource.downloadedCurrentWeather.observeForever{
+        // whenever currentWeather in weatherNetwork is updated, we save the updated value in database.
+        weatherNetworkDataSource.currentWeather.observeForever {
             persistCurrentWeatherData(it.currentWeatherEntry)
         }
     }
 
-    private fun persistCurrentWeatherData(currentWeatherEntry: CurrentWeatherEntry){
-        GlobalScope.launch (Dispatchers.IO){
+    private fun persistCurrentWeatherData(currentWeatherEntry: CurrentWeatherEntry) {
+        GlobalScope.launch(Dispatchers.IO) {
             currentWeatherDao.upsert(currentWeatherEntry)
         }
     }
@@ -32,9 +33,9 @@ class ForecastRepositoryImpl(
         if network -> get data from network
         otherwise, get data from db
          */
-        return withContext(Dispatchers.IO){
-            // if no connection, we won't fire anything. Furthermore, we will update the live data in this object
-            weatherNetworkDataSource.fetchCurrentWeather("London", "en")
+        return withContext(Dispatchers.IO) {
+            // We will update the live data in this object.
+            weatherNetworkDataSource.syncCurrentWeather("London", "en")
 
             // after this point, the database has been updated.
             // we need to return a liveData from the database, and this liveData is going to be used in View. I mean,

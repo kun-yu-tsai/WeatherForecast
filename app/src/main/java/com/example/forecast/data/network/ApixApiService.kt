@@ -10,12 +10,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-const val API_KEY = "6815c7de821e4924a8e203011192204"
-
-
-// http://api.apixu.com/v1/current.json?key=6815c7de821e4924a8e203011192204&q=London&Lang=en
-
-interface ApixuWeatherApiService {
+// This is going to be used in Retrofit
+interface ApixApiService {
 
     @GET("current.json")
     fun getCurrentWeather(
@@ -23,39 +19,39 @@ interface ApixuWeatherApiService {
         @Query("lang") langCode: String = "en"
     ): Deferred<CurrentWeatherResponse>
 
-    companion object{
+    companion object {
         operator fun invoke(
             connectivityInterceptor: ConnectivityInterceptor
-        ): ApixuWeatherApiService {
-            val requestInterceptor = Interceptor{chain ->
-                val url = chain
-                    .request()
+        ): ApixApiService {
+
+            val addQueryInterceptor = Interceptor { chain ->
+                val addedQueryUrl = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("key", API_KEY)
+                    .addQueryParameter("key", "value")
                     .build()
 
-                val request = chain
-                    .request()
+                val updatedUrlRequest = chain.request()
                     .newBuilder()
-                    .url(url)
+                    .url(addedQueryUrl)
                     .build()
 
-                return@Interceptor chain.proceed(request)
+                chain.proceed(updatedUrlRequest)
             }
 
-            val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(requestInterceptor)
+            val okHttpClient = OkHttpClient
+                .Builder()
                 .addInterceptor(connectivityInterceptor)
+                .addInterceptor(addQueryInterceptor)
                 .build()
 
             return Retrofit.Builder()
+                .baseUrl("baseUrl")
                 .client(okHttpClient)
-                .baseUrl("https://api.apixu.com/v1/")
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .build()
-                .create(ApixuWeatherApiService::class.java)
+                .create(ApixApiService::class.java)
         }
     }
 }

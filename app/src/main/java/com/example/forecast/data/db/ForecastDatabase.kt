@@ -7,9 +7,8 @@ import androidx.room.RoomDatabase
 import com.example.forecast.data.db.entity.CurrentWeatherEntry
 
 
-// Set tables
 @Database(
-    entities = [CurrentWeatherEntry::class],
+    entities = [CurrentWeatherEntry::class], // tables
     version = 1
 )
 abstract class ForecastDatabase : RoomDatabase() {
@@ -36,32 +35,3 @@ abstract class ForecastDatabase : RoomDatabase() {
 
     }
 }
-
-
-//@Database(
-//    entities = [CurrentWeatherEntry::class],
-//    version = 1
-//)
-//abstract class ForecastDatabase : RoomDatabase() {
-//    abstract fun currentWeatherDao(): CurrentWeatherDao
-//
-//    companion object {
-//        // Apply volatile to make sure this variable keeps its changes among all threads.
-//        @Volatile
-//        private var instance: ForecastDatabase? = null
-//        // A lock to be used in synchronization block
-//        private val LOCK = Any()
-//
-//        // Initialisation is executed in synchronization block.
-//        operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
-//            instance ?: buildDatabase(context).also { instance = it }
-//        }
-//
-//        private fun buildDatabase(context: Context) =
-//            Room.databaseBuilder(
-//                context,
-//                ForecastDatabase::class.java,
-//                "forecast.db"
-//            ).build()
-//    }
-//}
