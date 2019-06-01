@@ -10,8 +10,32 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+    operator fun Int.invoke() {
+        println(this)
+    }
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        println(test("null"))
+//        println(Demo())
+        val demo = Demo()
+        println(demo)
+        3()
+    }
+
+    private fun test(string: String?): String {
+        return string ?: "good".also { println(it) }
+    }
+
+
+    class Demo private constructor(private val name: String){
+//        operator fun invoke(){
+//            println("123")
+//        }
+
+        companion object{
+            operator fun invoke(): String {
+                return "123"
+            }
+        }
     }
 }

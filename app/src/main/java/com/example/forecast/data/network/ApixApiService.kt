@@ -10,6 +10,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+const val API_KEY = "6815c7de821e4924a8e203011192204"
+
 // This is going to be used in Retrofit
 interface ApixApiService {
 
@@ -28,7 +30,7 @@ interface ApixApiService {
                 val addedQueryUrl = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("key", "value")
+                    .addQueryParameter("key", API_KEY)
                     .build()
 
                 val updatedUrlRequest = chain.request()
@@ -46,7 +48,7 @@ interface ApixApiService {
                 .build()
 
             return Retrofit.Builder()
-                .baseUrl("baseUrl")
+                .baseUrl("https://api.apixu.com/v1/")
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())

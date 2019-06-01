@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.forecast.R
 import kotlinx.android.synthetic.main.current_weather_fragment.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
@@ -41,7 +42,7 @@ class CurrentWeatherFragment : Fragment(), KodeinAware {
         bindUI()
     }
 
-    private fun bindUI() = GlobalScope.launch {
+    private fun bindUI() = GlobalScope.launch(Dispatchers.Main) {
         val currentWeather = viewModel.currentWeatherLiveData.await()
         currentWeather.observe(this@CurrentWeatherFragment, Observer {
             textView.text = it.toString()
