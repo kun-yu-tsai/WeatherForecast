@@ -10,10 +10,10 @@ class CurrentWeatherViewModel(
 ) : ViewModel() {
     private val unitSystem = UnitSystem.METRIC
 
-    private val isMetric : Boolean
+    val isMetricUnit : Boolean
         get() = unitSystem == UnitSystem.METRIC
 
     val currentWeatherLiveData by lazyDeferred {
-        forecastRepository.getCurrentWeather(isMetric)
+        forecastRepository.getCurrentWeather(isMetricUnit)
     }
 }
